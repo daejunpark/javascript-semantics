@@ -1,10 +1,9 @@
-require "builtins/bool.k"
-require "builtins/int.k"
+require "domains.k"
 
 module JS-ORIG-SYNTAX
 
-imports BOOL-SYNTAX-HOOKS
-imports INT-SYNTAX-HOOKS
+imports BOOL-SYNTAX
+imports INT-SYNTAX
 
 // Based on ECMA-262, 5.1 Edition, June 2011
 

@@ -1,16 +1,13 @@
-require "builtins/bool.k"
-require "builtins/int.k"
-require "builtins/float.k"
-require "builtins/string.k"
+require "domains.k"
 
 module JS-ORIG-SYNTAX-UTIL
 
 imports JS-ORIG-SYNTAX
 
-imports BOOL-HOOKS
-imports INT-HOOKS
-imports FLOAT-HOOKS
-imports STRING-HOOKS
+imports BOOL
+imports INT
+imports FLOAT
+imports STRING
 
 // Name
 
