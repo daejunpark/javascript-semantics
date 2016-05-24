@@ -3,14 +3,14 @@ require "js-str-numeric-literal.k"
 require "js-prelude.k"
 
 module JS-SYNTAX
+imports JS-ORIG-SYNTAX-PGM-ONLY
 imports JS-ORIG-SYNTAX
-imports JS-STR-NUMERIC-LITERAL
 endmodule
 
 module JS-MAIN
 
-imports JS-SYNTAX
 imports JS-TRANS
+imports JS-STR-NUMERIC-LITERAL
 imports JS-PRELUDE
 
 //////////////////////////////////////////////////////////////////////////////

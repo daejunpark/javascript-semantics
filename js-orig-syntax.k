@@ -1,5 +1,18 @@
 require "domains.k"
 
+module JS-ORIG-SYNTAX-PGM-ONLY
+
+syntax Name ::= r"(?<![\\_\\$A-Za-z0-9])[\\_\\$A-Za-z][\\_\\$A-Za-z0-9]*"  [token, autoReject]
+
+syntax MyFloat ::= r"([\\+-]?[0-9]+(\\.[0-9]*)?|\\.[0-9]+)([eE][\\+-]?([0-9]+(\\.[0-9]*)?|\\.[0-9]d+))?"  [token]
+
+syntax MyString ::= r"[\\\"](([^\\\"\n\r\\\\])|([\\\\][nrtf\\\"\\\\])|([\\\\][x][0-9a-fA-F]{2})|([\\\\][u][0-9a-fA-F]{4}))*[\\\"]"  [token]
+syntax MyString ::=    r"['](([^\\\"\n\r\\\\])|([\\\\][nrtf\\\"\\\\])|([\\\\][x][0-9a-fA-F]{2})|([\\\\][u][0-9a-fA-F]{4}))*[']"     [token]
+
+syntax APIName ::= r"[\\@][\\_\\$A-Za-z0-9]*"  [token, autoReject]
+
+endmodule
+
 module JS-ORIG-SYNTAX
 
 imports BOOL-SYNTAX
@@ -81,7 +94,7 @@ syntax Literal ::= "this"
 
 syntax Null ::= "null"
 
-syntax Name ::= r"(?<![\\_\\$A-Za-z0-9])[\\_\\$A-Za-z][\\_\\$A-Za-z0-9]*"   [token, notInRules, autoReject]
+syntax Name
 
 // 7.8.3 Numeric Literals
 //
@@ -91,7 +104,7 @@ syntax Name ::= r"(?<![\\_\\$A-Za-z0-9])[\\_\\$A-Za-z][\\_\\$A-Za-z0-9]*"   [tok
 // (0 | [1-9][0-9]*)           ([eE] [+-]? [0-9]+)?      // DecimalIntegerLiteral                    ExponentPartopt
 // 0[xX] [0-9a-fA-F]+                                // HexIntegerLiteral
 
-syntax MyFloat ::= r"([\\+-]?[0-9]+(\\.[0-9]*)?|\\.[0-9]+)([eE][\\+-]?([0-9]+(\\.[0-9]*)?|\\.[0-9]d+))?" [token, notInRules, notInGround]
+syntax MyFloat
 
 // 7.8.4 String Literals
 //
@@ -105,8 +118,7 @@ syntax MyFloat ::= r"([\\+-]?[0-9]+(\\.[0-9]*)?|\\.[0-9]+)([eE][\\+-]?([0-9]+(\\
 //   \\[\n\r\u2028\u2029] | \\\r\n |                 // LineContinuation
 
 // FIXME: consider lookahead symbol for the case:  \ 0 [lookahead \not\in DecimalDigit]
-syntax MyString ::= r"[\\\"](([^\\\"\n\r\\\\])|([\\\\][nrtf\\\"\\\\])|([\\\\][x][0-9a-fA-F]{2})|([\\\\][u][0-9a-fA-F]{4}))*[\\\"]"  [token, notInRules, notInGround]
-syntax MyString ::=    r"['](([^\\\"\n\r\\\\])|([\\\\][nrtf\\\"\\\\])|([\\\\][x][0-9a-fA-F]{2})|([\\\\][u][0-9a-fA-F]{4}))*[']"     [token, notInRules, notInGround]
+syntax MyString
 
 // 11.1.5 Object Initialiser
 // 
@@ -219,6 +231,6 @@ syntax Expression ::= LeftExpression
 
 syntax CallExpression ::= APIName "(" Expressions ")"
 
-syntax APIName ::= r"[\\@][\\_\\$A-Za-z0-9]*"   [token, notInRules, autoReject]
+syntax APIName
 
 endmodule
