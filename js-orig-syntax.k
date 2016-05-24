@@ -81,7 +81,7 @@ syntax Literal ::= "this"
 
 syntax Null ::= "null"
 
-syntax Name ::= Token{[\_\$A-Za-z][\_\$A-Za-z0-9]*}   [notInRules]
+syntax Name ::= r"(?<![\\_\\$A-Za-z0-9])[\\_\\$A-Za-z][\\_\\$A-Za-z0-9]*"   [token, notInRules, autoReject]
 
 // 7.8.3 Numeric Literals
 //
@@ -91,8 +91,7 @@ syntax Name ::= Token{[\_\$A-Za-z][\_\$A-Za-z0-9]*}   [notInRules]
 // (0 | [1-9][0-9]*)           ([eE] [+-]? [0-9]+)?      // DecimalIntegerLiteral                    ExponentPartopt
 // 0[xX] [0-9a-fA-F]+                                // HexIntegerLiteral
 
-syntax MyFloat ::= Token{[\+\-]?[0-9]+"."[0-9]+([eE][\+\-]?[0-9]+)?}
-                   [regex("([\\+-]?\\d(\\.\\d*)?|\\.\\d+)([eE][\\+-]?(\\d(\\.\\d*)?|\\.\\d+))?"), notInRules, notInGround]
+syntax MyFloat ::= r"([\\+-]?[0-9]+(\\.[0-9]*)?|\\.[0-9]+)([eE][\\+-]?([0-9]+(\\.[0-9]*)?|\\.[0-9]d+))?" [token, notInRules, notInGround]
 
 // 7.8.4 String Literals
 //
@@ -106,11 +105,8 @@ syntax MyFloat ::= Token{[\+\-]?[0-9]+"."[0-9]+([eE][\+\-]?[0-9]+)?}
 //   \\[\n\r\u2028\u2029] | \\\r\n |                 // LineContinuation
 
 // FIXME: consider lookahead symbol for the case:  \ 0 [lookahead \not\in DecimalDigit]
-syntax MyString ::= MyString1 | MyString2
-syntax MyString1 ::= Token{ "'" ((~[\'\\\n\r]) | (((([\\]~[1-9xu]) | ([\\][\r][\n])) | ([\\][x][0-9a-fA-F][0-9a-fA-F])) | ([\\][u][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))*  "'"}
-                           [regex("['](([^'\\\\\\n\\r])|([\\\\][^1-9xu])|([\\\\][\\r][\\n])|([\\\\][x][0-9a-fA-F]{2})|([\\\\][u][0-9a-fA-F]{4}))*[']"), notInRules, notInGround]
-syntax MyString2 ::= Token{"\"" ((~[\"\\\n\r]) | (((([\\]~[1-9xu]) | ([\\][\r][\n])) | ([\\][x][0-9a-fA-F][0-9a-fA-F])) | ([\\][u][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))*  "\""}
-                     [regex("[\\\"](([^\\\"\\\\\\n\\r])|([\\\\][^1-9xu])|([\\\\][\\r][\\n])|([\\\\][x][0-9a-fA-F]{2})|([\\\\][u][0-9a-fA-F]{4}))*[\\\"]"), notInRules, notInGround]
+syntax MyString ::= r"[\\\"](([^\\\"\n\r\\\\])|([\\\\][nrtf\\\"\\\\])|([\\\\][x][0-9a-fA-F]{2})|([\\\\][u][0-9a-fA-F]{4}))*[\\\"]"  [token, notInRules, notInGround]
+syntax MyString ::=    r"['](([^\\\"\n\r\\\\])|([\\\\][nrtf\\\"\\\\])|([\\\\][x][0-9a-fA-F]{2})|([\\\\][u][0-9a-fA-F]{4}))*[']"     [token, notInRules, notInGround]
 
 // 11.1.5 Object Initialiser
 // 
@@ -223,6 +219,6 @@ syntax Expression ::= LeftExpression
 
 syntax CallExpression ::= APIName "(" Expressions ")"
 
-syntax APIName ::= Token{[\@][\_\$A-Za-z0-9]*}   [notInRules]
+syntax APIName ::= r"[\\@][\\_\\$A-Za-z0-9]*"   [token, notInRules, autoReject]
 
 endmodule
