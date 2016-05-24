@@ -201,10 +201,10 @@ rule ^Expression(function F:Name ( Ps:Parameters ) { Ss:SourceElements }) => %fu
 rule ^Expression(function        ( Ps:Parameters ) { Ss:SourceElements }) => %fun(          ^Parameters(Ps), ^SourceElements(Ss))
 
 // member, new, call
-rule ^Expression('_`[_`]::Expression*Expression->Expression(E:MemberExpression,,Es:Expressions)) => %mem(^Expression(E), ^Expressions2Comma(Es))
-rule ^Expression('_`[_`]::Expression*Expression->Expression(E:CallExpression  ,,Es:Expressions)) => %mem(^Expression(E), ^Expressions2Comma(Es))
-rule ^Expression(       '_._::Expression*Name->Expression(E:MemberExpression,,X:Name        )) => %mem(^Expression(E), %con(StringOfName(X)))
-rule ^Expression(       '_._::Expression*Name->Expression(E:CallExpression  ,,X:Name        )) => %mem(^Expression(E), %con(StringOfName(X)))
+rule ^Expression(`'_[_]::Expression*Expression->Expression`(E:MemberExpression,Es:Expressions)) => %mem(^Expression(E), ^Expressions2Comma(Es))
+rule ^Expression(`'_[_]::Expression*Expression->Expression`(E:CallExpression  ,Es:Expressions)) => %mem(^Expression(E), ^Expressions2Comma(Es))
+rule ^Expression(       `'_._::Expression*Name->Expression`(E:MemberExpression,X:Name        )) => %mem(^Expression(E), %con(StringOfName(X)))
+rule ^Expression(       `'_._::Expression*Name->Expression`(E:CallExpression  ,X:Name        )) => %mem(^Expression(E), %con(StringOfName(X)))
 //
 rule ^Expression(new E:MemberExpression ( Es:Expressions )) => %new(^Expression(E), ^Expressions2List(Es))
 rule ^Expression(new E:NewExpression                      ) => %new(^Expression(E), %nil)
@@ -239,7 +239,7 @@ rule ^Expression(E1:Expression >          E2:Expression) => %bop(%gt,          ^
 rule ^Expression(E1:Expression <=         E2:Expression) => %bop(%le,          ^Expression(E1), ^Expression(E2))
 rule ^Expression(E1:Expression >=         E2:Expression) => %bop(%ge,          ^Expression(E1), ^Expression(E2))
 rule ^Expression(E1:Expression instanceof E2:Expression) => %bop(%instanceof,  ^Expression(E1), ^Expression(E2))
-rule ^Expression('_in_::Expression*Expression->Expression(E1:Expression,,E2:Expression)) => %bop(%in, ^Expression(E1), ^Expression(E2))
+rule ^Expression(`'_in_::Expression*Expression->Expression`(E1:Expression,E2:Expression)) => %bop(%in, ^Expression(E1), ^Expression(E2))
 rule ^Expression(E1:Expression ==         E2:Expression) => %bop(%eq,          ^Expression(E1), ^Expression(E2))
 rule ^Expression(E1:Expression !=         E2:Expression) => %bop(%neq,         ^Expression(E1), ^Expression(E2))
 rule ^Expression(E1:Expression ===        E2:Expression) => %bop(%eqs,         ^Expression(E1), ^Expression(E2))
