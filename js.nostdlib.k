@@ -2800,8 +2800,8 @@ rule @GetReference(E:Exp) => @Throw(@ReferenceError("GetReference",E)) when notB
 
 syntax Bool ::= "#@IsReferenceExp" "(" Exp ")" [function]
 
-rule #@IsReferenceExp(E:Exp) => getKLabel(E) ==KLabel '%var`(_`)
-                        orBool getKLabel(E) ==KLabel '%mem`(_`,_`)
+rule #@IsReferenceExp(E:Exp) => getKLabel(E) ==K #klabel(`'%var(_)`)
+                         orBool getKLabel(E) ==K #klabel(`'%mem(_,_)`)
 
 rule %emptyExp => Undefined
 
@@ -4024,11 +4024,11 @@ rule #@AddContinueLabel(L, %do(S,E))    =>    %do(   %seq(S, %labelContinue(L)),
 rule #@AddContinueLabel(L, %for  (S0,E1,E2,S)) => %for  (S0, E1, E2, %seq(S, %labelContinue(L)))
 rule #@AddContinueLabel(L, %forin(S0,E1,E2,S)) => %forin(S0, E1, E2, %seq(S, %labelContinue(L)))
 rule #@AddContinueLabel(L, %label(L',S)) => %label(L', #@AddContinueLabel(L,S))
-rule #@AddContinueLabel(_, S) => S   when getKLabel(S) =/=KLabel '%while`(_`,_`)
-                                 andBool getKLabel(S) =/=KLabel '%do`(_`,_`)
-                                 andBool getKLabel(S) =/=KLabel '%for`(_`,_`,_`,_`)
-                                 andBool getKLabel(S) =/=KLabel '%forin`(_`,_`,_`,_`)
-                                 andBool getKLabel(S) =/=KLabel '%label`(_`,_`)
+rule #@AddContinueLabel(_, S) => S   when getKLabel(S) =/=K #klabel(`'%while(_,_)`)
+                                  andBool getKLabel(S) =/=K #klabel(`'%do(_,_)`)
+                                  andBool getKLabel(S) =/=K #klabel(`'%for(_,_,_,_)`)
+                                  andBool getKLabel(S) =/=K #klabel(`'%forin(_,_,_,_)`)
+                                  andBool getKLabel(S) =/=K #klabel(`'%label(_,_)`)
 
 syntax Stmt ::= "%labelContinue" "(" Var ")"
 syntax Stmt ::= "%labelBreak"    "(" Var ")"
@@ -4361,13 +4361,13 @@ syntax Bool ::= "#@IsMatch" "(" CompletionTypeGoto "," Stmt ")" [function]
 rule #@IsMatch(@Break(L:Var),    %labelBreak(L:Var ))    => true
 rule #@IsMatch(@Break(""   ),    %labelBreak(_     ))    => true
 rule #@IsMatch(@Break(L:Var),    %labelBreak(L':Var))    => false when L =/=K "" andBool L =/=K L'
-rule #@IsMatch(@Break(_    ),    S                  )    => false when getKLabel(S) =/=KLabel '%labelBreak`(_`)
-                                                              andBool getKLabel(S) =/=KLabel '%seq`(_`,_`)
+rule #@IsMatch(@Break(_    ),    S                  )    => false when getKLabel(S) =/=K #klabel(`'%labelBreak(_)`)
+                                                               andBool getKLabel(S) =/=K #klabel(`'%seq(_,_)`)
 rule #@IsMatch(@Continue(L:Var), %labelContinue(L:Var )) => true
 rule #@IsMatch(@Continue(""   ), %labelContinue(_     )) => true
 rule #@IsMatch(@Continue(L:Var), %labelContinue(L':Var)) => false when L =/=K "" andBool L =/=K L' 
-rule #@IsMatch(@Continue(_    ), S                     ) => false when getKLabel(S) =/=KLabel '%labelContinue`(_`)
-                                                              andBool getKLabel(S) =/=KLabel '%seq`(_`,_`)
+rule #@IsMatch(@Continue(_    ), S                     ) => false when getKLabel(S) =/=K #klabel(`'%labelContinue(_)`)
+                                                               andBool getKLabel(S) =/=K #klabel(`'%seq(_,_)`)
 
 // NOTE: @FunctionDeclaration is not executed here, but at 10.5 Declaration Binding Instantiation
 rule %fdecl(_,_,_) => %emptyStmt
@@ -4387,7 +4387,7 @@ rule #@IsStrictAux(_) => false [owise]
 syntax Stmt ::= "#@SkipPrelude" "(" Stmt ")" [function]
 rule #@SkipPrelude(%seq(%exp(%con("BEGIN PRELUDE")),S)) => #@SkipPreludeAux(S)
 rule #@SkipPrelude(%seq(S1,S2)) => %seq(S1,S2) when S1 =/=K %exp(%con("BEGIN PRELUDE"))
-rule #@SkipPrelude(S) => S when getKLabel(S) =/=KLabel '%seq`(_`,_`)
+rule #@SkipPrelude(S) => S when getKLabel(S) =/=K #klabel(`'%seq(_,_)`)
 //
 syntax Stmt ::= "#@SkipPreludeAux" "(" Stmt ")" [function]
 rule #@SkipPreludeAux(%seq(%exp(%con("END PRELUDE")),S)) => S
@@ -5339,7 +5339,7 @@ rule #@IsAPIName(X:Var) => findString(X:>String,"@",0) ==K 0
 //
 syntax Bool ::= "#@IsAPI" "(" Exp ")" [function]
 rule #@IsAPI(%var(X:Var)) => #@IsAPIName(X)
-rule #@IsAPI(E:Exp) => false when getKLabel(E) =/=KLabel '%var`(_`)
+rule #@IsAPI(E:Exp) => false when getKLabel(E) =/=K #klabel(`'%var(_)`)
 
 // API Calls Redirection, Phase I
 
