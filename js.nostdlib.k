@@ -3716,7 +3716,7 @@ syntax Id ::= "$ref"
 rule %bopassign(Op:Op,L:Exp,E:Exp)
   => BEGIN
      Let $ref = @GetReference(L);
-     Do @PutValueAndReturn($ref, %bop(Op, GetValue($ref), E));
+     Do @PutValueAndReturn($ref, %bop(Op, GetValue($ref):>Val, E));
      END
 
 // 11.14 Comma Operator(,)
@@ -4561,7 +4561,7 @@ rule @NewFunctionAux(Params:String, @Cons(Body:Val,@Nil))
      END
 syntax KItem /* Oid */ ::= "@NewFunctionAuxAux" "(" K /* String */ "," K /* String */ ")" [seqstrict]
 rule @NewFunctionAuxAux(Params:String, Body:String)
-  => @CreateFunction(#@ParseParams(Params), #@Parse(Body))
+  => @CreateFunction(#@ParseParams(Params):>Exps, #@Parse(Body):>Stmt)
 
 syntax KItem /* Oid */ ::= "@CreateFunction" "(" Exps "," Stmt ")"
 rule <k> @CreateFunction(Params:Exps,FunBody:Stmt)
