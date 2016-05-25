@@ -2327,7 +2327,7 @@ rule <k> NewDeclarativeEnvironment(E:Eid, Strict:Bool) => @e(!N) ... </k>
                <strict> Strict </strict>
                <declEnvRec> .Map </declEnvRec>
              </env>)
-       _
+       ...
      </envs>
 
 // 10.2.2.3 NewObjectEnvironment (O, E)
@@ -2345,7 +2345,7 @@ rule <k> NewObjectEnvironment(O:Oid,E:Eid,ProvideThis:Bool,Strict:Bool) => @e(!N
                  <provideThis> ProvideThis </provideThis>
                </objEnvRec>
              </env>)
-       _
+       ...
      </envs>
 
 //////////////////////////////////////////////////////////////////////////////
@@ -4237,7 +4237,7 @@ rule <k> @CreateFunctionObjectInt2(Params:Exps, FunBody:Stmt, Scope:Eid, Strict:
                  "Extensible"       |-> true
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 syntax KItem /* Oid */ ::= "@CreateFunctionObjectAux" "(" K /* Oid */ "," K /* Bool */ ")" [seqstrict]
@@ -4319,7 +4319,7 @@ rule <k> Construct@Default(F:Oid, Args:Vals) => Call(F,@o(!N),Args) ~> @ReturnCo
          </properties>
          _
        </obj>
-       _
+       ...
      </objs>
 // TODO: Check correctness of steps 5-7
 
@@ -4515,7 +4515,7 @@ rule <k> @CreateObject => @o(!N) ... </k>
                  "Extensible" |-> true
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 // 15.2.3.4 Object.getOwnPropertyNames ( O )
@@ -4778,7 +4778,7 @@ rule <k> @CreateArray(Len:Int, Vs:Vals) => @CreateArray@InsertElements(@o(!N),Vs
                  "Extensible"     |-> true
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 syntax KItem /* Oid */ ::= "@CreateArray@InsertElements" "(" K /* Oid */ "," K /* Vals */ "," K /* Int */ ")" [seqstrict]
@@ -4967,7 +4967,7 @@ rule <k> @CreateString(S:String) => @o(!N) ... </k>
                  "PrimitiveValue" |-> S
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 // 15.5.5 Properties of String Instances
@@ -5042,7 +5042,7 @@ rule <k> @CreateBoolean(B:Bool) => @o(!N) ... </k>
                  "PrimitiveValue" |-> B
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 //////////////////////////////////////////////////////////////////////////////
@@ -5077,7 +5077,7 @@ rule <k> @CreateNumber(V:Number) => @o(!N) ... </k>
                  "PrimitiveValue" |-> V
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 // 15.7.4.5 Number.prototype.toFixed (fractionDigits)
@@ -5166,7 +5166,7 @@ rule <k> @CreateDate(V:Number) => @o(!N) ... </k>
                  "PrimitiveValue" |-> V
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 // 15.9.1.14 TimeClip (time)
@@ -5218,7 +5218,7 @@ rule <k> @CreateRegExp => @o(!N) ... </k>
                  "Extensible"     |-> true
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 //////////////////////////////////////////////////////////////////////////////
@@ -5250,7 +5250,7 @@ rule <k> @CreateError(Msg:String) => @o(!N) ... </k>
                  "Extensible" |-> true
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 //////////////////////////////////////////////////////////////////////////////
@@ -5297,7 +5297,7 @@ rule <k> @CreateNativeError(NativeError:Oid, Msg:String, KDebug:K) => @o(!N) ...
                  "KDebug"     |-> KDebug // NOTE: For debug
                </internalProperties>
              </obj>)
-       _
+       ...
      </objs>
 
 syntax Oid ::= "#@ResolveNativeError" "(" Oid ")" [function]
@@ -5413,7 +5413,7 @@ rule <k> Call(@("NoConstructor"), Undefined, @Cons(O:Val,@Nil)) => Undefined ...
          _
        </obj>
        (<obj> <oid> P </oid> _ </obj> => .Bag)
-       _
+       ...
      </objs>
 
 rule Call(@("GetInternalProperty"), Undefined, @Cons(O:Val,@Cons(P:Val,@Nil)))
