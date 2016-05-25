@@ -2321,7 +2321,7 @@ syntax KItem /* Eid */ ::= "NewDeclarativeEnvironment" "(" K /* Eid */ "," K /* 
 
 rule <k> NewDeclarativeEnvironment(E:Eid, Strict:Bool) => @e(!N) ... </k>
      <envs>
-       (. => <env>
+       (.Bag => <env>
                <eid> @e(!N:Int) </eid>
                <outer> E </outer>
                <strict> Strict </strict>
@@ -2336,7 +2336,7 @@ syntax KItem /* Eid */ ::= "NewObjectEnvironment" "(" K /* Oid */ "," K /* Eid *
 
 rule <k> NewObjectEnvironment(O:Oid,E:Eid,ProvideThis:Bool,Strict:Bool) => @e(!N) ... </k>
      <envs>
-       (. => <env>
+       (.Bag => <env>
                <eid> @e(!N:Int) </eid>
                <outer> E </outer>
                <strict> Strict </strict>
@@ -2362,7 +2362,7 @@ rule <k> @EnterGlobalCode(Code:Stmt)
      ... </k>
      <envs>
        // 10.2.3 The Global Environment
-       (. => <env>
+       (.Bag => <env>
                <eid> @GlobalEid </eid>
                <objEnvRec>
                  <bindingObj> @GlobalOid </bindingObj>
@@ -4210,7 +4210,7 @@ rule <k> @CreateFunctionObjectInt1(Params:Exps, FunBody:Stmt, Scope:Eid, Strict:
 syntax KItem /* Oid */ ::= "@CreateFunctionObjectInt2" "(" Exps "," Stmt "," Eid "," Bool "," Int "," Int ")"
 rule <k> @CreateFunctionObjectInt2(Params:Exps, FunBody:Stmt, Scope:Eid, Strict:Bool, P:Int, F:Int) => @CreateFunctionObjectAux(@o(F), Strict) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(F) </oid>
                <properties>
                  "length"           |-> @desc("Value" |-> #@Length(Params) "Writable" |-> false "Enumerable" |-> false "Configurable" |-> false)
@@ -4226,7 +4226,7 @@ rule <k> @CreateFunctionObjectInt2(Params:Exps, FunBody:Stmt, Scope:Eid, Strict:
                  "Strict"           |-> Strict
                </internalProperties>
              </obj>)
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(P) </oid>
                <properties>
                  "constructor"      |-> @desc("Value" |-> @o(F)           "Writable" |-> true  "Enumerable" |-> false "Configurable" |-> true)
@@ -4302,7 +4302,7 @@ rule Construct(F:Oid, Args:Vals)
 syntax KItem /* Oid */ ::= "Construct@Default" "(" K /* Oid */ "," K /* Vals */ ")" [seqstrict]
 rule <k> Construct@Default(F:Oid, Args:Vals) => Call(F,@o(!N),Args) ~> @ReturnConstructedObject(@o(!N)) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties> .Map </properties>
                <internalProperties>
@@ -4506,7 +4506,7 @@ rule @NewObject(                 @Nil   ) => @CreateObject
 syntax KItem /* Oid */ ::= "@CreateObject"
 rule <k> @CreateObject => @o(!N) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties> .Map </properties>
                <internalProperties>
@@ -4767,7 +4767,7 @@ rule @NewArray(@Cons(V:Val,@Nil)) => @CreateArray(1, @Cons(V:Val,@Nil)) when not
 syntax KItem /* Oid */ ::= "@CreateArray" "(" K /* Int */ "," K /* Vals */ ")" [seqstrict]
 rule <k> @CreateArray(Len:Int, Vs:Vals) => @CreateArray@InsertElements(@o(!N),Vs,0) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties>
                  "length" |-> @desc("Value" |-> Len "Writable" |-> true "Enumerable" |-> false "Configurable" |-> false) // 15.4.5.2 length
@@ -4955,7 +4955,7 @@ rule @NewString(            @Nil   ) => @CreateString("")
 syntax KItem /* Oid */ ::= "@CreateString" "(" K /* String */ ")" [seqstrict]
 rule <k> @CreateString(S:String) => @o(!N) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties>
                  "length" |-> @desc("Value" |-> lengthString(S) "Writable" |-> false "Enumerable" |-> false "Configurable" |-> false) // 15.5.5.1 length
@@ -5032,7 +5032,7 @@ rule @NewBoolean(            @Nil   ) => @CreateBoolean(false) // TODO: Report: 
 syntax KItem /* Oid */ ::= "@CreateBoolean" "(" K /* Bool */ ")" [seqstrict]
 rule <k> @CreateBoolean(B:Bool) => @o(!N) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties> .Map </properties>
                <internalProperties>
@@ -5067,7 +5067,7 @@ rule @NewNumber(            @Nil   ) => @CreateNumber(0)
 syntax KItem /* Oid */ ::= "@CreateNumber" "(" K /* Bool */ ")" [seqstrict]
 rule <k> @CreateNumber(V:Number) => @o(!N) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties> .Map </properties>
                <internalProperties>
@@ -5156,7 +5156,7 @@ rule Construct(@DateOid,             @Nil ) => @CreateDate(0) // HACK: 0 is used
 syntax KItem /* Oid */ ::= "@CreateDate" "(" K /* Number */ ")" [seqstrict]
 rule <k> @CreateDate(V:Number) => @o(!N) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties> .Map </properties>
                <internalProperties>
@@ -5209,7 +5209,7 @@ rule Construct(@RegExpOid, _:Vals) => @CreateRegExp
 syntax KItem /* Oid */ ::= "@CreateRegExp"
 rule <k> @CreateRegExp => @o(!N) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties> .Map </properties>
                <internalProperties>
@@ -5239,7 +5239,7 @@ rule @NewError(            @Nil   ) => @CreateError("")
 syntax KItem /* Oid */ ::= "@CreateError" "(" K /* String */ ")" [seqstrict]
 rule <k> @CreateError(Msg:String) => @o(!N) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties>
                  "message"    |-> @desc("Value" |-> Msg "Writable" |-> true "Enumerable" |-> false "Configurable" |-> true)
@@ -5285,7 +5285,7 @@ rule @NewNativeError(NativeError:Oid, @Nil)           => @CreateNativeError(Nati
 syntax KItem /* Oid */ ::= "@CreateNativeError" "(" K /* Oid */ "," K /* String */ "," K ")" [seqstrict(1,2)]
 rule <k> @CreateNativeError(NativeError:Oid, Msg:String, KDebug:K) => @o(!N) ... </k>
      <objs>
-       (. => <obj>
+       (.Bag => <obj>
                <oid> @o(!N:Int) </oid>
                <properties>
                  "message"    |-> @desc("Value" |-> Msg "Writable" |-> true "Enumerable" |-> false "Configurable" |-> true)
@@ -5412,7 +5412,7 @@ rule <k> Call(@("NoConstructor"), Undefined, @Cons(O:Val,@Nil)) => Undefined ...
          </internalProperties>
          _
        </obj>
-       (<obj> <oid> P </oid> _ </obj> => .)
+       (<obj> <oid> P </oid> _ </obj> => .Bag)
        _
      </objs>
 
