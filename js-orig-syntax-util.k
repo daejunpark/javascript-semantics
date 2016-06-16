@@ -9,6 +9,8 @@ imports INT
 imports FLOAT
 imports STRING
 
+syntax String ::= "#tokenToString" "(" K ")"    [function, klabel(#tokenToString), hook(STRING.token2string)]
+
 // Name
 
 syntax String ::= StringOfName(Name) [function, notInPrograms]
