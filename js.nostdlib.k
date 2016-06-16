@@ -10,7 +10,6 @@ endmodule
 module JS-MAIN
 
 imports JS-TRANS
-imports JS-STR-NUMERIC-LITERAL
 imports JS-PRELUDE
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1888,7 +1887,7 @@ rule ToNumber(O:Oid     ) => ToNumber(ToPrimitive(O,"Number"))
 // 9.3.1 ToNumber Applied to the String Type
 
 syntax KItem /* Bool */ ::= "@IsStrNumericLiteral" "(" K /* String */ ")" [seqstrict]
-rule @IsStrNumericLiteral(N:String) => @IsStrNumericLiteralAux(#parse(N,"StrNumericLiteral"))
+rule @IsStrNumericLiteral(N:String) => @IsStrNumericLiteralAux(#parseInModule(N, "StrNumericLiteral", "JS-STR-NUMERIC-LITERAL"))
 
 syntax KItem /* Bool */ ::= "@IsStrNumericLiteralAux" "(" K /* StrNumericLiteral or IOError */ ")" // nostrict
 rule @IsStrNumericLiteralAux(K) => isStrNumericLiteral(K) ==K true
